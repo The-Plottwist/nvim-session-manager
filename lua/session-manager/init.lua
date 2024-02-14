@@ -13,19 +13,19 @@ local sessions = {}
 local data_file = ""
 local cur_session = ""
 local cur_session_file = ""
-local augroup_name = "nvim-session-manager"
+local event_data = { augroup_name = "session-manager" }
 local notif_options = { title = "Session Manager" }
 
 --initialize OS specific variables
 local is_os_windows = false
 local path_seperator = '/'
-local function pre_initialize()
+local function initialize()
     if vim.fn.has("win32") == 1 then
         is_os_windows = true
         path_seperator = '\\'
     end
 end
-pre_initialize()
+initialize()
 
 local check_session_cache = { id = -1, name = "" }
 local function check_session(strName)
@@ -64,16 +64,8 @@ function M.setup(tableOpts)
     defaults = vim.tbl_deep_extend("force", {}, defaults, tableOpts or {})
 
     --ensure directories
-    if not vim.fn.isdirectory(defaults.session_dir) then
-
+    if vim.fn.isdirectory(defaults.session_dir) == 0 then
         vim.fn.mkdir(defaults.session_dir, 'p')
-
-        if not is_os_windows then
-            vim.loop.fs_chmod(defaults.session_dir, "300")
-        end
-    else
-        vim.notify("Not a directory: " .. defaults.session_dir, "error", notif_options)
-        return
     end
 
     --configure sessions
@@ -85,23 +77,19 @@ function M.setup(tableOpts)
         end
         io.close(f)
     end
-    if sessions == {} then M.add(defaults.default_session) end
+    if next(sessions) == nil then M.add(defaults.default_session) end
     M.change_session(defaults.default_session, false)
 
-    post_initialize()
-end
-
-local function post_initialize()
-
+    --setup user commands
     vim.cmd([[
-        command! -nargs=0 SessionSave lua require("nvim-session-manager").save()
-        command! -bang SessionLoad lua require("nvim-session-manager").load("<bang>")
-        command! -nargs=1 SessionAdd lua require("nvim-session-manager").add("<args>")
-        command! -nargs=1 SessionDel lua require("nvim-session-manager").del("<args>")
-        command! -nargs=0 SessionList lua require("nvim-session-manager").list()
-        command! -nargs=? -bang SessionChange lua require("nvim-session-manager").change_session("<args>", "<bang>")
-        command! -nargs=0 SessionStopEvents lua require("nvim-session-manager").stop_events()
-        command! -nargs=0 SessionStartEvents lua require("nvim-session-manager").start_events()
+        command! -nargs=0 SessionSave lua require("session-manager").save()
+        command! -bang SessionLoad lua require("session-manager").load("<bang>")
+        command! -nargs=1 SessionAdd lua require("session-manager").add("<args>")
+        command! -nargs=1 SessionDel lua require("session-manager").del("<args>")
+        command! -nargs=0 SessionList lua require("session-manager").list()
+        command! -nargs=? -bang SessionChange lua require("session-manager").change_session("<args>", "<bang>")
+        command! -nargs=0 SessionStopEvents lua require("session-manager").stop_events()
+        command! -nargs=0 SessionStartEvents lua require("session-manager").start_events()
     ]])
 
     if events == {} then
@@ -151,7 +139,7 @@ function M.add(strName)
     table.insert(sessions, strName)
 
     local f = io.open(data_file, 'a')
-    io.write(strName, '\n')
+    f:write(strName .. '\n')
     io.close(f)
 
     M.change_session(strName, false)
@@ -197,7 +185,7 @@ function M.change_session(strName, boolLoad)
     local i,_ = check_session(strName)
     if i ~= -1 then
         cur_session = strName
-        cur_session_file = defaults.session_dir .. path_seperator .. strName .. ".vim"
+        cur_session_file = vim.fn.fnameescape(defaults.session_dir .. path_seperator .. strName .. ".vim")
         if boolLoad then M.load() end
         return
     end
@@ -206,12 +194,13 @@ function M.change_session(strName, boolLoad)
 end
 
 function M.stop_events()
-    vim.api.nvim_del_augroup_by_name(augroup_name)
+    --TODO: Implement this as for each id loop
+    -- autocmd id's...
 end
 
 function M.start_events()
 
-    vim.api.nvim_create_augroup(augroup_name)
+    vim.api.nvim_create_augroup(event_data.augroup_name, {clear = true})
     vim.api.nvim_create_autocmd(defaults.events, {
         pattern = '*',
         callback = M.save
