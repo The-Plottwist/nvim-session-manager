@@ -13,7 +13,7 @@ local sessions = {}
 local data_file = ""
 local cur_session = ""
 local cur_session_file = ""
-local event_data = { augroup_name = "session-manager" }
+local event_data = { augroup_name = "SessionManager" }
 local notif_options = { title = "Session Manager" }
 
 --initialize OS specific variables
@@ -114,7 +114,7 @@ function M.load(boolDelBuffers)
         boolDelBuffers = true
     end
 
-    if boolDelBuffers then
+    if boolDelBuffers == true then
         vim.cmd("silent %bdelete!")
     end
 
@@ -186,7 +186,7 @@ function M.change_session(strName, boolLoad)
     if i ~= -1 then
         cur_session = strName
         cur_session_file = vim.fn.fnameescape(defaults.session_dir .. path_seperator .. strName .. ".vim")
-        if boolLoad then M.load() end
+        if boolLoad == true then M.load() end
         return
     end
 
@@ -194,17 +194,21 @@ function M.change_session(strName, boolLoad)
 end
 
 function M.stop_events()
-    --TODO: Implement this as for each id loop
-    -- autocmd id's...
+    vim.api.nvim_del_augroup_by_name(event_data.augroup_name)
 end
 
 function M.start_events()
 
     vim.api.nvim_create_augroup(event_data.augroup_name, {clear = true})
-    vim.api.nvim_create_autocmd(defaults.events, {
-        pattern = '*',
-        callback = M.save
-    })
+
+    local event_id = 0
+    for _,i in pairs(defaults.events) do
+        event_id = vim.api.nvim_create_autocmd(i, {
+            pattern = '*',
+            callback = M.save,
+            group = event_data.augroup_name
+        })
+    end
 end
 
 return M
