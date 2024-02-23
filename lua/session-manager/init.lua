@@ -4,8 +4,9 @@
 -- # ----------------------------------------------------------- #
 
 -- # ----------------------- Description ----------------------- #
--- # Minimal session manager.
--- # Intended to be used with other plugins.
+-- # Layer around neovim sessions.
+-- # Provides basic functionality.
+-- # Enhanced usage with other plugins is aimed.
 -- # Example: The-Plottwist/nvim-workspace-manager
 
 
@@ -91,6 +92,18 @@ function M.setup(tableOpts)
         command! -nargs=0 SessionStopEvents lua require("session-manager").stop_events()
         command! -nargs=0 SessionStartEvents lua require("session-manager").start_events()
     ]])
+
+    --trigger 'BufEnter' events if session is loaded before 'UIEnter'
+    vim.api.nvim_create_autocmd("UIEnter", {
+        pattern = '*',
+        callback = function()
+            vim.cmd([[
+                let cur_tab = tabpagenr()
+                silent tabdo edit
+                exec cur_tab 'tabnext'
+            ]])
+        end
+    })
 
     if events == {} then
         return
@@ -201,9 +214,8 @@ function M.start_events()
 
     vim.api.nvim_create_augroup(event_data.augroup_name, {clear = true})
 
-    local event_id = 0
     for _,i in pairs(defaults.events) do
-        event_id = vim.api.nvim_create_autocmd(i, {
+        vim.api.nvim_create_autocmd(i, {
             pattern = '*',
             callback = M.save,
             group = event_data.augroup_name
