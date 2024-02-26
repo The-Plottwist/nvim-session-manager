@@ -105,7 +105,7 @@ function M.setup(tableOpts)
         end
     })
 
-    if events == {} then
+    if next(defaults.events) == nil then
         return
     end
 
