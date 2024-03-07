@@ -59,59 +59,7 @@ local defaults = {
 
 local M = {}
 
-function M.setup(tableOpts)
-
-    --configure defaults
-    defaults = vim.tbl_deep_extend("force", {}, defaults, tableOpts or {})
-
-    --ensure directories
-    if vim.fn.isdirectory(defaults.session_dir) == 0 then
-        vim.fn.mkdir(defaults.session_dir, 'p')
-    end
-
-    --configure sessions
-    data_file = defaults.session_dir .. path_seperator .. "session_data"
-    local f = io.open(data_file, 'r')
-    if f ~= nil then
-        for i in f:lines() do
-            table.insert(sessions, i)
-        end
-        io.close(f)
-    end
-    if next(sessions) == nil then M.add(defaults.default_session) end
-    M.change_session(defaults.default_session, false)
-
-    --setup user commands
-    vim.cmd([[
-        command! -nargs=0 SessionSave lua require("session-manager").save()
-        command! -bang SessionLoad lua require("session-manager").load("<bang>")
-        command! -nargs=1 SessionAdd lua require("session-manager").add("<args>")
-        command! -nargs=1 SessionDel lua require("session-manager").del("<args>")
-        command! -nargs=0 SessionList lua require("session-manager").list()
-        command! -nargs=? -bang SessionChange lua require("session-manager").change_session("<args>", "<bang>")
-        command! -nargs=0 SessionStopEvents lua require("session-manager").stop_events()
-        command! -nargs=0 SessionStartEvents lua require("session-manager").start_events()
-    ]])
-
-    --trigger 'BufEnter' events if session is loaded before 'UIEnter'
-    vim.api.nvim_create_autocmd("UIEnter", {
-        pattern = '*',
-        callback = function()
-            vim.cmd([[
-                let cur_tab = tabpagenr()
-                silent tabdo edit
-                exec cur_tab 'tabnext'
-            ]])
-        end
-    })
-
-    if next(defaults.events) == nil then
-        return
-    end
-
-    M.start_events()
-end
-
+--
 --from persistence.nvim: https://github.com/folke/persistence.nvim/blob/main/lua/persistence/config.lua
 function M.save()
 
@@ -222,5 +170,64 @@ function M.start_events()
         })
     end
 end
+
+
+function M.setup(tableOpts)
+
+    --configure defaults
+    defaults = vim.tbl_deep_extend("force", {}, defaults, tableOpts or {})
+
+    --ensure directories
+    if vim.fn.isdirectory(defaults.session_dir) == 0 then
+        vim.fn.mkdir(defaults.session_dir, 'p')
+    end
+
+    --configure sessions
+    data_file = defaults.session_dir .. path_seperator .. "session_data"
+    local f = io.open(data_file, 'r')
+    if f ~= nil then
+        for i in f:lines() do
+            table.insert(sessions, i)
+        end
+        io.close(f)
+    end
+    if next(sessions) == nil then M.add(defaults.default_session) end
+    M.change_session(defaults.default_session, false)
+
+    --setup user commands
+    vim.cmd([[
+        function! SessionList(A,L,P)
+            let s = execute("lua require('session-manager').list()")
+            return execute("echon s[1:]")
+        endfunction
+        command! -nargs=0 SessionList lua require("session-manager").list()
+        command! -nargs=0 SessionSave lua require("session-manager").save()
+        command! -bang SessionLoad lua require("session-manager").load("<bang>")
+        command! -nargs=1 SessionAdd lua require("session-manager").add("<args>")
+        command! -nargs=1 -complete=custom,SessionList SessionDel lua require("session-manager").del("<args>")
+        command! -nargs=? -bang -complete=custom,SessionList SessionChange lua require("session-manager").change_session("<args>", "<bang>")
+        command! -nargs=0 SessionStopEvents lua require("session-manager").stop_events()
+        command! -nargs=0 SessionStartEvents lua require("session-manager").start_events()
+    ]])
+
+    --trigger 'BufEnter' events if session is loaded before 'UIEnter'
+    vim.api.nvim_create_autocmd("UIEnter", {
+        pattern = '*',
+        callback = function()
+            vim.cmd([[
+                let cur_tab = tabpagenr()
+                silent tabdo edit
+                exec cur_tab 'tabnext'
+            ]])
+        end
+    })
+
+    if next(defaults.events) == nil then
+        return
+    end
+
+    M.start_events()
+end
+
 
 return M
