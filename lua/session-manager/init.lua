@@ -212,7 +212,7 @@ function M.setup(tableOpts)
 
     --trigger 'BufEnter' events if session is loaded before 'UIEnter'
     vim.api.nvim_create_autocmd("UIEnter", {
-        pattern = '*',
+        pattern = '*.*',
         callback = function()
             vim.cmd([[
                 let cur_tab = tabpagenr()
