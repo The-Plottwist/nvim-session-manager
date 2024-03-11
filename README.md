@@ -22,12 +22,12 @@ Standalone, no dependencies.
 ### Functions:
 |Name|Description|
 |---|---|
-|add(strName)|Adds a session <br>- Optional: ```strName =``` *```CURRENT_WORKING_DIRECTORY```* by default|
+|add(strName)|Adds a session <br>- Optional: ```strName = CURRENT_WORKING_DIRECTORY``` by default|
 |del(strName)|Deletes a session <br>- Mandatory: ```strName``` <br>- Returns immidiately if no argument is given|
 |list()|Lists sessions|
-|change_session(strName, boolLoad)|Changes session <br>- Optional: ```strName =``` *```last_session```* by default <br>- Optional: ```boolLoad =``` *```true```* by default|
+|change_session(strName, boolLoad)|Changes session <br>- Optional: ```strName = last_session``` by default <br>- Optional: ```boolLoad = true``` by default|
 |save()|Saves current session|
-|load(boolDelBuffers)|Loads current session <br>- Optional: ```boolDelBuffers =``` *```true```* by default|
+|load(boolDelBuffers)|Loads current session <br>- Optional: ```boolDelBuffers = true``` by default|
 |start_events()|Starts events|
 |stop_events()|Stops events|
 |get_session_name()|Returns current session name|
