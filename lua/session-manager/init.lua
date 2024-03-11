@@ -59,7 +59,11 @@ local defaults = {
 
 local M = {}
 
---
+
+function M.get_session_name()
+    return cur_session
+end
+
 --from persistence.nvim: https://github.com/folke/persistence.nvim/blob/main/lua/persistence/config.lua
 function M.save()
 
@@ -88,9 +92,7 @@ end
 
 function M.add(strName)
 
-    if (strName == nil) then
-        return
-    elseif (strName == "") then
+    if (strName == nil) or (strName == "") then
         strName = vim.fs.basename(vim.fn.getcwd())
     end
 
