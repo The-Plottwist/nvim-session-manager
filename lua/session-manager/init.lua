@@ -88,7 +88,11 @@ end
 
 function M.add(strName)
 
-    if (strName == nil) or (strName == "") then return end
+    if (strName == nil) then
+        return
+    elseif (strName == "") then
+        strName = vim.fs.basename(vim.fn.getcwd())
+    end
 
     local i,_ = check_session(strName)
     if i ~= -1 then
@@ -203,7 +207,7 @@ function M.setup(tableOpts)
         command! -nargs=0 SessionList lua require("session-manager").list()
         command! -nargs=0 SessionSave lua require("session-manager").save()
         command! -bang SessionLoad lua require("session-manager").load("<bang>")
-        command! -nargs=1 SessionAdd lua require("session-manager").add(<q-args>)
+        command! -nargs=? SessionAdd lua require("session-manager").add(<q-args>)
         command! -nargs=1 -complete=custom,SessionList SessionDel lua require("session-manager").del(<q-args>)
         command! -nargs=? -bang -complete=custom,SessionList SessionChange lua require("session-manager").change_session(<q-args>, "<bang>")
         command! -nargs=0 SessionStopEvents lua require("session-manager").stop_events()
