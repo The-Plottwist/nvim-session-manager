@@ -33,6 +33,16 @@ Standalone, no dependencies.
 |get_session_name()|Returns current session name|
   
   
+### Installation:
+Lazy.nvim
+```lua
+{
+	"The-Plottwist/nvim-session-manager",
+	branch = "stable"
+}
+```
+  
+  
 ### Defaults:
 ```lua
 defaults = {
