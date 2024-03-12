@@ -4,6 +4,8 @@ A single layer implementation.
   
 Standalone, no dependencies.
   
+Can be used with [nvim workspace manager](https://github.com/The-Plottwist/nvim-workspace-manager).
+  
   
 ### User Commands:
 
