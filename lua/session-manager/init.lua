@@ -133,6 +133,21 @@ function M.del(strName)
     io.close(f)
 end
 
+function M.rename(strName)
+
+    if (strName == nil) or (strName == "") then
+        return
+    end
+
+    local i,j = check_session(cur_session)
+    if j ~= defaults.default_session then
+        M.add(strName)
+        M.del(j)
+    else
+        vim.notify("Cannot rename default session", "error", notif_options)
+    end
+end
+
 function M.list()
     for _,i in pairs(sessions) do
         print(i)
@@ -210,6 +225,7 @@ function M.setup(tableOpts)
         command! -nargs=0 SessionSave lua require("session-manager").save()
         command! -bang SessionLoad lua require("session-manager").load("<bang>")
         command! -nargs=? SessionAdd lua require("session-manager").add(<q-args>)
+        command! -nargs=1 SessionRename lua require("session-manager").rename(<q-args>)
         command! -nargs=1 -complete=custom,SessionList SessionDel lua require("session-manager").del(<q-args>)
         command! -nargs=? -bang -complete=custom,SessionList SessionChange lua require("session-manager").change_session(<q-args>, "<bang>")
         command! -nargs=0 SessionStopEvents lua require("session-manager").stop_events()
