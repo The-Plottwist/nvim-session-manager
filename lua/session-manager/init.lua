@@ -60,7 +60,13 @@ local defaults = {
 local M = {}
 
 
-function M.get_session_name()
+function M.get_session_name(boolPrint)
+
+    if boolPrint == true then
+        print(cur_session)
+        return
+    end
+
     return cur_session
 end
 
@@ -131,6 +137,9 @@ function M.del(strName)
         end
     end
     io.close(f)
+
+    local file = vim.fn.fnameescape(defaults.session_dir .. path_seperator .. strName .. ".vim")
+    vim.cmd("call delete(\'" .. file .. "\')")
 end
 
 function M.rename(strName)
@@ -225,6 +234,7 @@ function M.setup(tableOpts)
         command! -nargs=0 SessionSave lua require("session-manager").save()
         command! -bang SessionLoad lua require("session-manager").load("<bang>")
         command! -nargs=? SessionAdd lua require("session-manager").add(<q-args>)
+        command! -nargs=0 SessionName lua require("session-manager").get_session_name(true)
         command! -nargs=1 SessionRename lua require("session-manager").rename(<q-args>)
         command! -nargs=1 -complete=custom,SessionList SessionDel lua require("session-manager").del(<q-args>)
         command! -nargs=? -bang -complete=custom,SessionList SessionChange lua require("session-manager").change_session(<q-args>, "<bang>")
