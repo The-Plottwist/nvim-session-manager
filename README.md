@@ -40,8 +40,8 @@ Standalone, no dependencies.
 Lazy.nvim
 ```lua
 {
-	"The-Plottwist/nvim-session-manager",
-	branch = "stable"
+    "The-Plottwist/nvim-session-manager",
+    branch = "stable"
 }
 ```
   
@@ -49,14 +49,14 @@ Lazy.nvim
 ### Defaults:
 ```lua
 defaults = {
-	events = {"VimPreLeave"},
+    events = {"VimPreLeave"},
 
-	--from persistence.nvim: https://github.com/folke/persistence.nvim/blob/main/lua/persistence/config.lua
-	save_options = { "buffers", "curdir", "tabpages", "winsize", "skiprtp" },
+    --from persistence.nvim: https://github.com/folke/persistence.nvim/blob/main/lua/persistence/config.lua
+    save_options = { "buffers", "curdir", "tabpages", "winsize", "skiprtp" },
 	
-	session_dir = vim.fn.stdpath("state") .. path_seperator .. "sessions",
+    session_dir = vim.fn.stdpath("state") .. path_seperator .. "sessions",
 	
-	default_session = "last_session"
+    default_session = "last_session"
 }
 ```
   
@@ -80,7 +80,7 @@ vim.cmd("let g:ARGC = argc()")
 
 --load last_session if no file argument is given
 if vim.g.ARGC == 0 then
-	require("session-manager").load()
+    require("session-manager").load()
 end
 ```
   
