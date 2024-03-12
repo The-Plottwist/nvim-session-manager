@@ -15,6 +15,8 @@ Standalone, no dependencies.
 |SessionChange[!]|Change session <br>- Defaults to *```last_session```* if no argument is given <br>- If used with bang, session won't be loaded|
 |SessionSave|Save session|
 |SessionLoad[!]|Load session <br>- If used with bang, existing buffers won't be deleted (useful during startup)|
+|SessionName|Print current session name|
+|SessionRename|Rename current session|
 |SessionStartEvents|Start events <br>- Events when to save a session, default is: VimLeavePre|
 |SessionStopEvents|Stop events|
   
@@ -25,6 +27,7 @@ Standalone, no dependencies.
 |add(strName)|Adds a session <br>- Optional: *```strName = CURRENT_WORKING_DIRECTORY```*|
 |del(strName)|Deletes a session <br>- Mandatory: *```strName```* <br>- Returns immidiately if no argument is given|
 |list()|Lists sessions|
+|rename(strName)|Renames current session <br>- Mandatory: *```strName```*|
 |change_session(strName, boolLoad)|Changes session <br>- Optional: *```strName = last_session```* <br>- Optional: *```boolLoad = true```*|
 |save()|Saves current session|
 |load(boolDelBuffers)|Loads current session <br>- Optional: *```boolDelBuffers = true```*|
@@ -58,7 +61,8 @@ defaults = {
 ```
   
   
-### Notes:
+**Notes**
+  
 -To modify: *```require("session-manager").setup({events = {}, ...})```*
   
 -Does not load any sessions by default
