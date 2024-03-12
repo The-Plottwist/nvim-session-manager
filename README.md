@@ -33,7 +33,7 @@ Standalone, no dependencies.
 |load(boolDelBuffers)|Loads current session <br>- Optional: *```boolDelBuffers = true```*|
 |start_events()|Starts events|
 |stop_events()|Stops events|
-|get_session_name()|Returns current session name|
+|get_session_name(boolPrint)|Returns current session name <br>- Optional: *```boolPrint = false```*|
   
   
 ### Installation:
