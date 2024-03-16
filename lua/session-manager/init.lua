@@ -49,8 +49,7 @@ end
 local defaults = {
     events = { "VimLeavePre" },
 
-    --from persistence.nvim: https://github.com/folke/persistence.nvim/blob/main/lua/persistence/config.lua
-    save_options = { "buffers", "curdir", "tabpages", "winsize", "skiprtp" },
+    save_options = { "blank", "buffers", "curdir", "help", "skiprtp", "tabpages", "winsize", "winpos" },
 
     session_dir = vim.fn.stdpath("state") .. path_seperator .. "sessions",
     default_session = "last_session",

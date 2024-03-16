@@ -53,8 +53,9 @@ Lazy.nvim
 defaults = {
     events = {"VimPreLeave"},
 
-    --from persistence.nvim: https://github.com/folke/persistence.nvim/blob/main/lua/persistence/config.lua
-    save_options = { "buffers", "curdir", "tabpages", "winsize", "skiprtp" },
+    --For more info: help sessionoptions
+    save_options = { "blank", "buffers", "curdir", "help", "skiprtp", "tabpages", "winsize", "winpos" },
+
 	
     session_dir = vim.fn.stdpath("state") .. path_seperator .. "sessions",
 	
