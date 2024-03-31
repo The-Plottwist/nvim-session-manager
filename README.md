@@ -56,7 +56,6 @@ defaults = {
     --For more info: help sessionoptions
     save_options = { "blank", "buffers", "curdir", "help", "skiprtp", "tabpages", "winsize", "winpos" },
 
-	
     session_dir = vim.fn.stdpath("state") .. path_seperator .. "sessions",
 	
     default_session = "last_session"
