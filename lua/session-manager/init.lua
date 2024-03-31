@@ -247,8 +247,9 @@ function M.setup(tableOpts)
         callback = function()
             vim.cmd([[
                 let cur_tab = tabpagenr()
-                silent tabdo edit
+                silent tabdo windo edit
                 exec cur_tab 'tabnext'
+                exec 1 'wincmd w'
             ]])
         end
     })
