@@ -69,7 +69,7 @@ defaults = {
   
 -Does not load any sessions by default
   
--Adds an ungrouped *```UIEnter```* event seperate from User events to refresh buffers when a session is loaded before UI (Gives error on empty tabpages, please close empty tabs).
+-Adds an ungrouped *```UIEnter```* event seperate from User events to refresh buffers when a session is loaded before UI
   
   
 ### Example Usage:
