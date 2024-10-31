@@ -246,10 +246,12 @@ function M.setup(tableOpts)
         pattern = '*',
         callback = function()
             vim.cmd([[
-                let cur_tab = tabpagenr()
-                silent tabdo windo edit
-                exec cur_tab 'tabnext'
-                exec 1 'wincmd w'
+                if bufname() != ''
+                    let cur_tab = tabpagenr()
+                    silent tabdo windo edit
+                    exec cur_tab 'tabnext'
+                    exec 1 'wincmd w'
+                endif
             ]])
         end
     })
